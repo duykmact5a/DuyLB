@@ -9,8 +9,8 @@ router.post('/refreshtoken', ctrls.refreshAccessToken)
 router.get('/logout',ctrls.logout)
 router.get('/', [verifyAccessToken, isAdmin],ctrls.getUsers)
 router.delete('/', [verifyAccessToken, isAdmin],ctrls.deleteUser)
-router.delete('/current', [verifyAccessToken],ctrls.updateUser)
-
+router.put('/current', [verifyAccessToken],ctrls.updateUser)
+router.put('/cart' , [verifyAccessToken] , ctrls.updateCart)
 
 
 module.exports= router

@@ -2,6 +2,7 @@ const User = require('../models/user')
 const asyncHandler = require('express-async-handler')
 const {generateAccessToken , generateRefreshToken} = require('../middlewares/jwt')
 const jwt = require('jsonwebtoken')
+const user = require('../models/user')
 
 
 const register = asyncHandler(async (req, res) => {
@@ -127,6 +128,29 @@ const updateUser = asyncHandler(async (req, res) => {
         updatedUser: response ? response : 'Some thing went wrong'
     })
 })
+const updateCart = asyncHandler(async (req, res) => {
+    const { _id } = req.user
+    const {pid , quantity , color} = req.body
+    if (!pid || !quantity || !color) throw new Error('Missing inputs')
+    const user = await User.findById(_id).select('cart')
+    const alredyProduct = user?.cart?.find(el => el.product.toString() === pid)
+if(alredyProduct) {
+    
+
+}else{
+    const response = await User.findByIdAndUpdate(_id, {$push: {cart: {product: pid  , quantity , color}}} , {new: true})
+
+    return res.status(200).json({
+        success: response ? true : false,
+        updatedUser: response ? response : 'Some thing went wrong'
+    })
+
+}
+      
+
+})
+
+
       module.exports ={
         register , 
         login,
@@ -135,6 +159,7 @@ const updateUser = asyncHandler(async (req, res) => {
         logout,
         getUsers,
         deleteUser,
-        updateUser
+        updateUser,
+        updateCart
     
       }
